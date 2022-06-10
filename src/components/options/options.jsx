@@ -29,27 +29,32 @@ export default class Options extends Component {
         }
     }
 
-    setCharset = () => {
+    getCharset = () => {
         const { symbols, numbers, l, U } = this.state;
-        const charNum = '1234567890',
+        const charNum = '0123456789',
             charL = 'abcdefghijklmnopqrstuvwxyz',
             charU = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            charSym = "(){}<>,.!?:;//'|'`~@#$'%^&*+-_="
-        const charset = 
+            charSym = ",.-{}+!\"#$%/<>()=?"
+        const charset =
             (symbols ? charSym : '') +
-            (l ? charL : '' ) +
-            (U ? charU : '') + 
+            (l ? charL : '') +
+            (U ? charU : '') +
             (numbers ? charNum : '');
         return charset;
     }
 
     passGen = () => {
-        const {length} = this.state;
-        let res = '';
-        for (var i = 0, n = this.setCharset().length; i < length; ++i) {
-            res += this.setCharset().charAt(Math.floor(Math.random() * n));
+        const { length } = this.state,
+            validChars = this.getCharset();
+        let generatedPassword = '';
+        for (var i = 0; i < length; i++) {
+            let randomNumber = crypto.getRandomValues(new Uint32Array(1))[0];
+            randomNumber = randomNumber / 0x100000000;
+
+            randomNumber = Math.floor(randomNumber * validChars.length);
+            generatedPassword += validChars[randomNumber];
         }
-        return res;
+        return generatedPassword;
     }
 
     optionButton = (optionName, option) => {
