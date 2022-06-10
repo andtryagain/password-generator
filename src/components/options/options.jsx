@@ -46,6 +46,10 @@ export default class Options extends Component {
     passGen = () => {
         const { length } = this.state,
             validChars = this.getCharset();
+        
+        if (validChars === '')  
+            return 'OPTION_NEEDED'
+
         let generatedPassword = '';
         for (var i = 0; i < length; i++) {
             let randomNumber = crypto.getRandomValues(new Uint32Array(1))[0];
